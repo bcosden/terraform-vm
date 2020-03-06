@@ -2,10 +2,10 @@
 # sp name: "azure-cli-2020-03-06-14-52-57"
 provider "azurerm" {
     version         = "~> 1.44"
-    subscription_id = ""
-    client_id       = ""
-    tenant_id       = ""
-}
+    tenant_id       = "${var.tenant_id}"
+    subscription_id = "${var.subscription_id}"
+    client_id       = "${var.client_id}"
+    client_secret   = "${var.client_secret}"
 
 terraform {
   backend "azurerm" {
@@ -13,6 +13,7 @@ terraform {
     storage_account_name  = "tstate27394"
     container_name        = "tsstate"
     key                   = "terraform.tfstate"
+    access_key            = "${var.storagekey}"
   }
 }
 
@@ -148,7 +149,7 @@ resource "azurerm_virtual_machine" "myterraformvm" {
     os_profile  {
         computer_name  = "myvm"
         admin_username = "azureuser"
-        admin_password = ""
+        admin_password = "${var.vmpassword}"
     }
 
     os_profile_windows_config {
