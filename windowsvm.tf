@@ -1,4 +1,4 @@
-## Configure the Microsoft Azure Provider
+# Configure the Microsoft Azure Provider
 # sp name: "azure-cli-2020-03-06-14-52-57"
 provider "azurerm" {
     version         = "~> 1.44"
@@ -7,15 +7,15 @@ provider "azurerm" {
     client_id       = "${var.client_id}"
     client_secret   = "${var.client_secret}"
 
-terraform {
-  backend "azurerm" {
-    resource_group_name   = "az-terraform-state"
-    storage_account_name  = "tstate27394"
-    container_name        = "tsstate"
-    key                   = "terraform.tfstate"
-    access_key            = "${var.storagekey}"
-  }
-}
+#terraform {
+#  backend "azurerm" {
+#    resource_group_name   = "az-terraform-state"
+#    storage_account_name  = "tstate27394"
+#    container_name        = "tsstate"
+#    key                   = "terraform.tfstate"
+#    access_key            = "${var.storagekey}"
+#  }
+#}
 
 # Create a resource group if it doesn’t exist
 resource "azurerm_resource_group" "myterraformgroup" {
