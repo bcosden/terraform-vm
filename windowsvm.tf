@@ -9,9 +9,18 @@ provider "azurerm" {
     features {}
 }
 
+terraform {
+  backend "azurerm" {
+    resource_group_name   = "az-terraform-state"
+    storage_account_name  = "tstate27394"
+    container_name        = "tsstate"
+    key                   = "terraform.tfstate"
+  }
+}
+
 # Create a resource group if it doesn’t exist
 resource "azurerm_resource_group" "myterraformgroup" {
-    name     = "azterraformgroup"
+    name     = "myResourceGroup"
     location = "eastus"
 
     tags = {
