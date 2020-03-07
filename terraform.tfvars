@@ -1,6 +1,0 @@
-client_id="azure_client_id"
-client_secret="azure_client_secret"
-subscription_id="azure_subscription_id"
-tenant_id="azure_ad_tenant"
-storagekey="azure_storage_access_key"
-vmpassword="vm_password"
