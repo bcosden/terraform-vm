@@ -20,7 +20,7 @@ terraform {
 
 # Create a resource group if it doesn’t exist
 resource "azurerm_resource_group" "myterraformgroup" {
-    name     = "aztestvmgroup"
+    name     = "az-terraform-rg"
     location = "eastus"
 
     tags = {
@@ -131,44 +131,48 @@ resource "azurerm_storage_account" "mystorageaccount" {
 }
 
 # Create virtual machine
-resource "azurerm_virtual_machine" "myterraformvm" {
+resource "azurerm_windows_virtual_machine" "myterraformvm" {
     name                  = "myVM"
     location              = "eastus"
     resource_group_name   = azurerm_resource_group.myterraformgroup.name
     network_interface_ids = [azurerm_network_interface.myterraformnic.id]
-    vm_size               = "Standard_DS1_v2"
+    size                  = "Standard_DS1_v2"
+    admin_username        = "azureuser"
+    admin_password        = var.vmpassword
 
-    storage_os_disk {
-        name              = "myOsDisk"
-        caching           = "ReadWrite"
-        create_option     = "FromImage"
-        managed_disk_type = "Premium_LRS"
+    os_disk {
+        caching              = "ReadWrite"
+        storage_account_type = "Premium_LRS"
     }
 
-    storage_image_reference {
-        publisher="MicrosoftWindowsServer"
-        offer="WindowsServer"
-        sku="2016-Datacenter"
-        version="latest"
-    }
-
-    os_profile  {
-        computer_name  = "myvm"
-        admin_username = "azureuser"
-        admin_password = var.vmpassword
-    }
-
-    os_profile_windows_config {
-        provision_vm_agent=true
-        timezone="Eastern Standard Time"
+    source_image_reference {
+        publisher = "MicrosoftWindowsServer"
+        offer     = "WindowsServer"
+        sku       = "2016-Datacenter"
+        version   = "latest"
     }
 
     boot_diagnostics {
-        enabled = "true"
-        storage_uri = azurerm_storage_account.mystorageaccount.primary_blob_endpoint
+        storage_account_uri = azurerm_storage_account.mystorageaccount.primary_blob_endpoint
     }
 
     tags = {
         environment = "Terraform Demo"
     }
 }
+
+data "azurerm_public_ip" "myterraformpublicip" {
+  name                = azurerm_public_ip.myterraformpublicip.name
+  resource_group_name = azurerm_resource_group.myterraformgroup.name
+}
+
+output "instance_ip_addr" {
+  value       = azurerm_public_ip.myterraformpublicip.ip_address
+  description = "The public IP address of the main server instance."
+}
+
+output "user_name" {
+    value       = azurerm_windows_virtual_machine.myterraformvm.admin_username
+    description = "Username"
+}
+
