@@ -25,8 +25,8 @@ while ( $read = $reader.ReadLine() ) {
     # if we find the keyvault token then call keyvault, else skip call
     if ($read -match "<") {
  
-        # Split line character is '=' needs to parameterized
-        $readkey, $readval = $read -split "="
+        # Split line character by token
+        $readkey, $readval = $read -split "<"
 
         # Get the interpolated keyvault name value <value>
         $val = $readval.Trim() -replace """<", ""
@@ -38,7 +38,7 @@ while ( $read = $reader.ReadLine() ) {
         # If the key does not exist return the original line else replace with key
         if ([string]::IsNullOrEmpty($keyval)) { $newstr += $read + "`r`n" } 
 
-        else { $newstr += $readkey + "= " + """$keyval""" + "`r`n" } 
+        else { $newstr += $readkey + "$keyval""" + "`r`n" } 
     
     } else { $newstr += $read + "`r`n" }
 }
